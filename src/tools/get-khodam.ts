@@ -29,9 +29,10 @@ Get khodam of the specified user ID. User ID is NOT username, but a unique ident
       return hash;
     }
 
-    const seed = hashString(userId + dateString);
-    const indexA = Math.abs(seed) % a.length;
-    const indexB = Math.abs(seed * 31) % b.length;
+    const seed1 = hashString(userId + dateString);
+    const seed2 = hashString(userId + dateString + "salt");
+    const indexA = Math.abs(seed1) % a.length;
+    const indexB = Math.abs(seed2) % b.length;
 
     return `${userId}'s Khodam is ${a[indexA]} ${b[indexB]}`;
   },
