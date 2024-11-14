@@ -36,6 +36,10 @@ COPY --from=prerelease /usr/src/app/package.json .
 # Define volume for output/memories
 VOLUME /usr/src/app/output/memories
 
+# Set permissions for the output directory
+RUN mkdir -p /usr/src/app/src/output && chown -R bun:bun /usr/src/app/src/output
+RUN mkdir -p /usr/src/app/src/output/memories && chown -R bun:bun /usr/src/app/src/output/memories
+
 # run the app
 USER bun
 EXPOSE 3000/tcp
