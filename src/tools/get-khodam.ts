@@ -4,6 +4,7 @@ export const getKhodam: ToolFunction = {
   name: 'getKhodam',
   description: `
 Get khodam of the specified user ID. User ID is NOT username, but a unique identifier for the user, containing only numbers.
+A user's khodam  changes every Monday 00:00 WIB (GMT+7).
   `,
   parameters: {
     type: 'object',
@@ -19,7 +20,12 @@ Get khodam of the specified user ID. User ID is NOT username, but a unique ident
     const now = new Date();
     const gmt7Offset = 7 * 60;
     const gmt7Time = new Date(now.getTime() + (gmt7Offset - now.getTimezoneOffset()) * 60 * 1000);
-    const dateString = gmt7Time.toISOString().split('T')[0];
+
+    // Get the Monday of the current week (GMT+7)
+    const monday = new Date(gmt7Time);
+    monday.setDate(monday.getDate() - monday.getDay() + 1); // 1 = Monday
+    monday.setHours(0, 0, 0, 0);
+    const dateString = monday.toISOString().split('T')[0];
 
     function hashString(str: string): number {
       let hash = 0;
@@ -34,6 +40,11 @@ Get khodam of the specified user ID. User ID is NOT username, but a unique ident
     const indexA = Math.abs(seed1) % a.length;
     const indexB = Math.abs(seed2) % b.length;
 
+    return {
+      userId,
+      khodamWeek: dateString,
+      khodam: `${a[indexA]} ${b[indexB]}`,
+    }
     return `${userId}'s Khodam is ${a[indexA]} ${b[indexB]}`;
   },
   functionInfo: ({ userId }) => `Membaca khodam <@${userId}>`,
