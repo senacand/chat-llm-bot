@@ -128,7 +128,7 @@ export class Bot {
         responseTokenCount
       );
 
-      this.contextManager.addMessage(channelId, functionMessage);
+      this.contextManager.addMessage(channelId, functionMessage, true);
 
       return this.generateResponse(channelId, [...functionCallInfos, functionResponse.info]);
     }
