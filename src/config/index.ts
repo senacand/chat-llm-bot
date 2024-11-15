@@ -15,6 +15,7 @@ export interface Config {
   twitchChannel: string;
   twitchChannels: string[];
   twitchBotUsername: string;
+  authorizedUsers: string[];
 }
 
 export const config: Config = {
@@ -30,4 +31,5 @@ export const config: Config = {
   twitchChannel: process.env.TWITCH_CHANNEL || '',
   twitchChannels: (process.env.TWITCH_CHANNELS || '').split(',').filter(Boolean),
   twitchBotUsername: process.env.TWITCH_BOT_USERNAME || '',
+  authorizedUsers: (process.env.AUTHORIZED_USERS || '').split(',').filter(Boolean),
 };

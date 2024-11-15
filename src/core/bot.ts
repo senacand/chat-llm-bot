@@ -32,7 +32,6 @@ export class Bot {
 
   private async onMessage(message: ChatMessage) {
     const messageTokenCount = this.llm.getTokenCount(message.content);
-
     const context = this.contextManager.getContext(message.channelId);
     const messages = context.messages;
 
@@ -45,8 +44,17 @@ export class Bot {
 
     this.contextManager.addMessage(message.channelId, newMessageHistory);
 
-    // Check if bot is mentioned
-    if (message.mentions.map(m => m.toLowerCase()).includes(this.chatService.getBotId().toLowerCase())) {
+    // Check authorization
+    const isAuthorized = config.authorizedUsers.length === 0 
+      || config.authorizedUsers.map(id => id.toLowerCase()).includes(message.authorId.toLowerCase());
+
+    console.log("author id", message.authorId);
+    console.log("author name", message.authorName);
+    // Check if bot is mentioned and user is authorized
+    if (
+      message.mentions.map(m => m.toLowerCase()).includes(this.chatService.getBotId().toLowerCase()) 
+      && isAuthorized
+    ) {
       const sendTyping = () => {
         this.chatService.sendTyping(message.channelId);
       };

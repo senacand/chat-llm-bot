@@ -14,8 +14,8 @@ class TwitchChatMessage implements ChatMessage {
   constructor(channel: string, userstate: any, message: string) {
     this.channelId = channel;
     this.content = message;
-    this.authorId = userstate['user-id'] || '';
-    this.authorName = userstate['display-name'] || userstate.username || '';
+    this.authorId = userstate.username || '';
+    this.authorName = userstate['display-name'];
     // Extract mentions from message (Twitch style @username)
     this.mentions = message.match(/@(\w+)/g)?.map(m => m.substring(1)) || [];
   }
@@ -85,18 +85,19 @@ export class TwitchChat extends EventEmitter implements ChatInterface {
   }
   
   async replyMessage(message: ChatMessage, content: string): Promise<void> {
-    const messages = this.splitMessage(content);
-    const lowerContent = content.toLowerCase();
-    const lowerAuthorName = message.authorName.toLowerCase();
-    const hasAuthorMention = lowerContent.includes(`@${lowerAuthorName}`);
+    return await this.sendMessage(message.channelId, content);
+    // const messages = this.splitMessage(content);
+    // const lowerContent = content.toLowerCase();
+    // const lowerAuthorName = message.authorName.toLowerCase();
+    // const hasAuthorMention = lowerContent.includes(`@${lowerAuthorName}`);
 
-    for (let i = 0; i < messages.length; i++) {
-      if (i === 0 && !hasAuthorMention) {
-      await this.client.say(message.channelId, `@${message.authorName} ${messages[i]}`);
-      } else {
-      await this.sendMessage(message.channelId, messages[i]);
-      }
-    }
+    // for (let i = 0; i < messages.length; i++) {
+    //   if (i === 0 && !hasAuthorMention) {
+    //   await this.client.say(message.channelId, `@${message.authorName} ${messages[i]}`);
+    //   } else {
+    //   await this.sendMessage(message.channelId, messages[i]);
+    //   }
+    // }
   }
   
   getBotId(): string {
