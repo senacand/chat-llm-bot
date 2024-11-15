@@ -46,7 +46,7 @@ export class Bot {
     this.contextManager.addMessage(message.channelId, newMessageHistory);
 
     // Check if bot is mentioned
-    if (message.mentions.includes(this.chatService.getBotId())) {
+    if (message.mentions.map(m => m.toLowerCase()).includes(this.chatService.getBotId().toLowerCase())) {
       const sendTyping = () => {
         this.chatService.sendTyping(message.channelId);
       };
@@ -59,7 +59,7 @@ export class Bot {
         clearInterval(typingInterval);
         await this.chatService.replyMessage(message, response.message);
         if (response.source) {
-          await this.chatService.sendMessage(message.channelId, response.source);
+          // await this.chatService.sendMessage(message.channelId, response.source);
         }
       } catch (error) {
         clearInterval(typingInterval);

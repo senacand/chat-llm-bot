@@ -11,6 +11,10 @@ export interface Config {
   openAiApiKey: string;
   discordToken: string;
   weatherApiKey?: string;
+  twitchToken: string;
+  twitchChannel: string;
+  twitchChannels: string[];
+  twitchBotUsername: string;
 }
 
 export const config: Config = {
@@ -22,4 +26,8 @@ export const config: Config = {
   openAiApiKey: process.env.OPENAI_KEY || '',
   discordToken: process.env.DISCORD_TOKEN || '',
   weatherApiKey: process.env.WEATHER_API_KEY,
+  twitchToken: process.env.TWITCH_TOKEN || '',
+  twitchChannel: process.env.TWITCH_CHANNEL || '',
+  twitchChannels: (process.env.TWITCH_CHANNELS || '').split(',').filter(Boolean),
+  twitchBotUsername: process.env.TWITCH_BOT_USERNAME || '',
 };
