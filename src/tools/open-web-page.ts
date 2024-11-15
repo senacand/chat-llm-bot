@@ -25,6 +25,13 @@ Use this if you need to get the content of a URL.
           "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11.6; rv:92.0) Gecko/20100101 Firefox/92.0"
         }
       });
+
+      if (response.status !== 200) {
+        return {
+          error: `Failed to fetch page: HTTP ${response.status}`
+        };
+      }
+
       return response.data.substring(0, 100000);
     } catch (error) {
       console.error(error);
