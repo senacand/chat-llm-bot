@@ -1,7 +1,7 @@
-import { Bot } from './src/core/bot';
-import { OpenAILLM } from './src/core/llm/openai-llm';
-import { DiscordChat } from './src/core/chat/discord-chat';
-import { tools } from './src/tools';
+import { Bot } from './core/bot';
+import { OpenAILLM } from './core/llm/openai-llm';
+import { DiscordChat } from './core/chat/discord-chat';
+import { tools } from './tools';
 
 require('dotenv').config();
 

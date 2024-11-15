@@ -43,4 +43,4 @@ RUN mkdir -p /usr/src/app/src/output/memories && chown -R bun:bun /usr/src/app/s
 # run the app
 USER bun
 EXPOSE 3000/tcp
-ENTRYPOINT [ "bun", "run", "index.ts" ]
+ENTRYPOINT [ "bun", "run", "src/index.ts" ]
