@@ -5,5 +5,6 @@ export interface LLMInterface {
     messages: ChatCompletionMessage[],
     functions?: any[]
   ): Promise<ChatCompletionMessage>;
-  getTokenCount(content: string): number;
+  
+  getTokenCount(content: string | any[]): number;
 }

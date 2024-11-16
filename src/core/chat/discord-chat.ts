@@ -10,6 +10,7 @@ class DiscordChatMessage implements ChatMessage {
   authorId: string;
   authorName: string;
   mentions: string[];
+  images?: string[];
   message: Message;
 
   constructor(message: Message) {
@@ -18,6 +19,10 @@ class DiscordChatMessage implements ChatMessage {
     this.authorId = message.author.id;
     this.authorName = `Display Name: ${message.author.displayName} | Global Display Name: ${message.author.globalName} | Username: ${message.author.username}`;
     this.mentions = message.mentions.users.map(user => user.id);
+    // Extract image URLs from attachments
+    this.images = message.attachments
+      .filter(att => att.contentType?.startsWith('image/'))
+      .map(att => att.url);
     this.message = message;
   }
 }

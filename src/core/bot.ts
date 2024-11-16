@@ -1,6 +1,6 @@
 import { ChatInterface } from './chat/chat-interface';
 import { LLMInterface } from './llm/llm-interface';
-import { ChatCompletionMessage, ChatMessage, ToolFunction } from '../types';
+import { ChatCompletionMessage, ChatMessage, ToolFunction, ChatCompletionContentPart } from '../types';
 import { config } from '../config';
 import { replacePlaceholders } from '../utils/replacePlaceholders';
 import { getMemory } from '../utils/memory';
@@ -30,16 +30,40 @@ export class Bot {
     this.chatService.start();
   }
 
-  private async onMessage(message: ChatMessage) {
-    const messageTokenCount = this.llm.getTokenCount(message.content);
+  private chatCompletionMessageFromMessage(message: ChatMessage): ChatCompletionMessage {
+    if (!message.images || message.images.length === 0) {
+      return {
+        role: 'user',
+        content: message.content,
+      };
+    }
 
+    let contents: ChatCompletionContentPart[] = []
+    contents.push({ text: message.content, type: 'text' });
+    contents.push(
+      ...message.images.map((image) => ({
+          type: 'image_url' as const,
+          image_url: {
+            url: image,
+          }
+        }))
+    );
+
+    return {
+      role: 'user',
+      content: contents,
+    }
+  }
+
+  private async onMessage(message: ChatMessage) {
+    const messageTokenCount = this.llm.getTokenCount(message.content) + ((message.images?.length || 0) * 85); // Currently hardcoded for low OpenAI Vision image. Need to change this.
     const context = this.contextManager.getContext(message.channelId);
     const messages = context.messages;
 
     // Add new message to context
     const newMessageHistory = new ChatMessageHistory(
       message,
-      { role: 'user', content: message.content, name: message.authorId },
+      this.chatCompletionMessageFromMessage(message),
       messageTokenCount
     );
 
@@ -142,7 +166,7 @@ export class Bot {
     const assistantMessage = new ChatMessageHistory(
       {
         channelId,
-        content: responseMessage.content || '',
+        content: responseMessage.content as string || '',
         authorId: this.chatService.getBotId(),
         authorName: this.chatService.getBotName(),
         mentions: [],
@@ -182,7 +206,7 @@ export class Bot {
     this.contextManager.setContext(channelId, cleanedMessages, totalTokenCount);
 
     return {
-      message: responseMessage.content || 'Sorry, I could not generate a response.',
+      message: responseMessage.content as string || 'Sorry, I could not generate a response.',
       source,
     };
   }
