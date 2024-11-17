@@ -1,9 +1,8 @@
 import OpenAI from 'openai';
 import { LLMInterface } from './llm-interface';
-import { ChatCompletionMessage, ChatCompletionContentPartImage } from '../../types';
+import { ChatCompletionMessage } from '../../types';
 import { config } from '../../config';
 import { encoding_for_model, TiktokenModel } from 'tiktoken';
-import { ChatCompletionContentPart } from 'openai/resources';
 
 export class OpenAILLM implements LLMInterface {
   private openai: OpenAI;

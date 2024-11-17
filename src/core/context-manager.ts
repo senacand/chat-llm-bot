@@ -48,4 +48,8 @@ export class ContextManager {
   setContext(channelId: string, messages: ChatMessageHistory[], tokenCount: number) {
     this.contextMessages.set(channelId, { messages, tokenCount });
   }
+
+  clearContext(channelId: string) {
+    this.contextMessages.delete(channelId);
+  }
 }

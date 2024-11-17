@@ -55,7 +55,7 @@ export class Bot {
     }
   }
 
-  private async onMessage(message: ChatMessage) {
+  private async onMessage(message: ChatMessage, isSecondAttempt: boolean = false) {
     const messageTokenCount = this.llm.getTokenCount(message.content) + ((message.images?.length || 0) * 85); // Currently hardcoded for low OpenAI Vision image. Need to change this.
     const context = this.contextManager.getContext(message.channelId);
     const messages = context.messages;
@@ -85,17 +85,24 @@ export class Bot {
         if (response.source) {
           await this.chatService.sendMessage(message.channelId, response.source);
         }
+
+        console.log(
+          "Message total count",
+          messages.length,
+          "Message token count",
+          context.tokenCount
+        );
       } catch (error) {
         clearInterval(typingInterval);
-        throw error;
-      }
 
-      console.log(
-        "Message total count",
-        messages.length,
-        "Message token count",
-        context.tokenCount
-      );
+        this.contextManager.clearContext(message.channelId);
+        if (isSecondAttempt) {
+          await this.chatService.replyMessage(message, 'Terjadi kesalahan, silakan coba lagi.');
+        }
+        else {
+          this.onMessage(message, true);
+        }
+      }
     }
   }
 
