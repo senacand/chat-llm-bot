@@ -12,6 +12,7 @@ export interface ChatMessage {
   authorName: string;
   mentions: string[];
   images?: string[];
+  createdAt: Date;
 }
 
 export class ChatMessageHistory implements ChatMessage {
@@ -23,6 +24,7 @@ export class ChatMessageHistory implements ChatMessage {
   images?: string[];
   completion: ChatCompletionMessage;
   tokens: number;
+  createdAt: Date;
 
   constructor(
     message: ChatMessage,
@@ -36,6 +38,7 @@ export class ChatMessageHistory implements ChatMessage {
     this.mentions = message.mentions;
     this.completion = completion;
     this.tokens = tokens;
+    this.createdAt = new Date();
   }
 }
 

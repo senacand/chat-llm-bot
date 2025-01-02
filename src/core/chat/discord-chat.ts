@@ -12,6 +12,7 @@ class DiscordChatMessage implements ChatMessage {
   mentions: string[];
   images?: string[];
   message: Message;
+  createdAt: Date;
 
   constructor(message: Message) {
     this.channelId = message.channelId;
@@ -24,6 +25,7 @@ class DiscordChatMessage implements ChatMessage {
       .filter(att => att.contentType?.startsWith('image/'))
       .map(att => att.url);
     this.message = message;
+    this.createdAt = message.createdAt;
   }
 }
 

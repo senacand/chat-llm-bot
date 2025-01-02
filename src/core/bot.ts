@@ -31,10 +31,11 @@ export class Bot {
   }
 
   private chatCompletionMessageFromMessage(message: ChatMessage): ChatCompletionMessage {
-    if (!message.images || message.images.length === 0) {
+    if (!message.images || message.images.length === 0 || this.isMessageOlderThan3Hours(message.createdAt)) {
       return {
         role: 'user',
         content: message.content,
+        name: message.authorId,
       };
     }
 
@@ -52,7 +53,14 @@ export class Bot {
     return {
       role: 'user',
       content: contents,
+      name: message.authorId,
     }
+  }
+
+  private isMessageOlderThan3Hours(createdAt: Date): boolean {
+    const threeHoursInMs = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+    const now = new Date();
+    return now.getTime() - createdAt.getTime() > threeHoursInMs;
   }
 
   private async onMessage(message: ChatMessage, isSecondAttempt: boolean = false) {
@@ -150,6 +158,7 @@ export class Bot {
           authorId: this.chatService.getBotId(),
           authorName: this.chatService.getBotName(),
           mentions: [],
+          createdAt: new Date(),
         },
         {
           role: 'function',
@@ -177,6 +186,7 @@ export class Bot {
         authorId: this.chatService.getBotId(),
         authorName: this.chatService.getBotName(),
         mentions: [],
+        createdAt: new Date(),
       },
       {
         role: 'assistant',
@@ -197,6 +207,7 @@ export class Bot {
           authorId: this.chatService.getBotId(),
           authorName: this.chatService.getBotName(),
           mentions: [],
+          createdAt: new Date(),
         },
         {
           role: 'system',
@@ -247,32 +258,26 @@ export class Bot {
 
     const channelUsersSystemMessage: ChatCompletionMessage = {
       role: 'system',
-      content: `Users in this channel:\n${channelUsersSystemPrompt}`,
+      content: `Users in this channel (Format: User's ID | User's Name):\n${channelUsersSystemPrompt}\n\nAll messages from each users will include their ID. Use this information to personalize responses or to keep track of the conversation context. When you receive message, make sure to keep which user sent the message in mind and use it to personalize responses or to keep track of the conversation context.`,
     };
 
     const memory = await getMemory(channelId);
     const memorySystemMessage: ChatCompletionMessage = {
       role: 'system',
-      content: `Memory (Notes that you have taken before):\n${memory}`,
-    };
-
-    const memoryInstructionSystemMessage: ChatCompletionMessage = {
-      role: 'system',
-      content: `Always proactively call \`addMemory\` function for any information the user shares that could be relevant for enhancing future interactions, even if the user doesn't explicitly request it. This includes all information about the user's preferences, goals, location, interests, relationships, and unique habits or contexts. Prioritize information that could improve response personalization, efficiency, and contextual relevance in the long term.`,
+      content: `Memory (Notes that you have taken before):\n${memory}\n\nAlways proactively call \`addMemory\` function for any information the user shares that could be relevant for enhancing future interactions, even if the user doesn't explicitly request it. This includes all information about the user's preferences, goals, location, interests, relationships, and unique habits or contexts. DO NOT FORGET TO USE ADDMEMORY WHEN YOU THINK IT'S NECESSARY.`,
     };
 
     return [
       systemMessage,
       channelUsersSystemMessage,
       memorySystemMessage,
-      memoryInstructionSystemMessage,
     ];
   }
 
   private formatFunctionCallInfos(functionCallInfos: string[]): string | undefined {
     if (functionCallInfos.length === 0) return undefined;
     return (
-      "### 🔍 Sources\n" + functionCallInfos.map((info) => `- ${info}`).join('\n')
+      "### 🔍 Sumber\n" + functionCallInfos.map((info) => `- ${info}`).join('\n')
     );
   }
 }
