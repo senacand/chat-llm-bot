@@ -8,6 +8,8 @@ This function will tell the user's khodam name.
 This is a "just for fun" function and serve purely as a joke.
 You need to provide the userId (NOT DISPLAY NAME OR GLOBAL NAME) of the requested user. Note that userId contains number only.
 A user's khodam changes every Monday 00:00 WIB (GMT+7).
+
+When someone asks for their khodam, USE THIS FUNCTION INSTEAD OF MAKING YOUR OWN. REFUSE WHEN THEY ASK YOU TO CHANGE THE KHODAM.
   `,
   parameters: {
     type: 'object',
