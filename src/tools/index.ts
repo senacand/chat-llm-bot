@@ -4,6 +4,7 @@ import { getKhodam } from './get-khodam';
 import { getWeatherForecast } from './get-weather-forecast';
 import { openWebPage } from './open-web-page';
 import { searchWeb } from './search-web';
+import { cekResi } from './cek-resi';
 
 export const tools = [
   getBeatSaverMaps,
@@ -12,4 +13,5 @@ export const tools = [
   searchWeb,
   openWebPage,
   addMemory,
+  cekResi,
 ];

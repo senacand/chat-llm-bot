@@ -11,6 +11,7 @@ export interface Config {
   openAiApiKey: string;
   discordToken: string;
   weatherApiKey?: string;
+  binderbyteApiKey?: string;
 }
 
 export const config: Config = {
@@ -22,4 +23,5 @@ export const config: Config = {
   openAiApiKey: process.env.OPENAI_KEY || '',
   discordToken: process.env.DISCORD_TOKEN || '',
   weatherApiKey: process.env.WEATHER_API_KEY,
+  binderbyteApiKey: process.env.BINDERBYTE_API_KEY,
 };
