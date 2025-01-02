@@ -33,11 +33,12 @@ COPY --from=prerelease /usr/src/app/src src
 COPY --from=prerelease /usr/src/app/package.json .
 
 # Define volume for output/memories
-VOLUME /usr/src/app/output/memories
+VOLUME /usr/src/app/src/output/memories
 
-# Set permissions for the output directory
-RUN mkdir -p /usr/src/app/src/output && chown -R bun:bun /usr/src/app/src/output
-RUN mkdir -p /usr/src/app/src/output/memories && chown -R bun:bun /usr/src/app/src/output/memories
+# Set permissions for the output directory and its parent directories
+RUN mkdir -p /usr/src/app/src/output/memories && \
+    chown -R bun:bun /usr/src/app/src && \
+    chmod -R 755 /usr/src/app/src
 
 # run the app
 USER bun
