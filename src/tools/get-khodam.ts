@@ -3,8 +3,11 @@ import { ToolFunction } from '../types';
 export const getKhodam: ToolFunction = {
   name: 'getKhodam',
   description: `
-Get khodam of the specified user ID. User ID is NOT username, but a unique identifier for the user, containing only numbers.
-A user's khodam  changes every Monday 00:00 WIB (GMT+7).
+Get the name of the khodam the specified user. Khodam in Indonesian beliefs is helper spirit and each person has one.
+This function will tell the user's khodam name.
+This is a "just for fun" function and serve purely as a joke.
+You need to provide the userId (NOT DISPLAY NAME OR GLOBAL NAME) of the requested user. Note that userId contains number only.
+A user's khodam changes every Monday 00:00 WIB (GMT+7).
   `,
   parameters: {
     type: 'object',
